@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — Grove &amp; Co.</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">Grove <span>&amp; Co.</span></a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html">Cart (<span id="cart-badge" style="display:none">0</span>)</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Thank You — triggers Purchase event -->
+  <div class="container">
+    <div class="thankyou">
+      <div class="checkmark">✅</div>
+      <h1>Thank You for Your Order!</h1>
+      <p>Your order has been confirmed and is being prepared. You'll receive a confirmation email shortly.</p>
+
+      <div class="order-details" id="order-details">
+        <div class="line"><span>Order ID</span><span id="detail-order-id"></span></div>
+        <div class="line"><span>Email</span><span id="detail-email"></span></div>
+        <div class="line" style="border-top:1px solid var(--border);margin-top:0.5rem;padding-top:0.5rem;">
+          <span>Subtotal</span><span id="detail-subtotal"></span>
+        </div>
+        <div class="line"><span>Shipping</span><span id="detail-shipping"></span></div>
+        <div class="line" style="font-weight:700;font-size:1.1rem;border-top:2px solid var(--border);margin-top:0.5rem;padding-top:0.5rem;">
+          <span>Total</span><span id="detail-total"></span>
+        </div>
+      </div>
+
+      <a href="products.html" class="btn btn-primary" style="margin-top:2rem;">Continue Shopping</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Grove &amp; Co. All rights reserved. | <a href="contact.html">Contact Us</a></p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    const order = JSON.parse(sessionStorage.getItem('grove_order') || 'null');
+
+    if (order) {
+      document.getElementById('detail-order-id').textContent = order.orderId;
+      document.getElementById('detail-email').textContent = order.email;
+      document.getElementById('detail-subtotal').textContent = `$${order.subtotal.toFixed(2)}`;
+      document.getElementById('detail-shipping').textContent = order.shipping === 0 ? 'Free' : `$${order.shipping.toFixed(2)}`;
+      document.getElementById('detail-total').textContent = `$${order.total.toFixed(2)}`;
+    } else {
+      document.getElementById('order-details').innerHTML = '<p style="color:var(--text-light);">No order details found.</p>';
+    }
+  </script>
+</body>
+</html>

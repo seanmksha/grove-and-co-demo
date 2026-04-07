@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart — Grove &amp; Co.</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">Grove <span>&amp; Co.</span></a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="products.html">Shop</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html" class="active">Cart (<span id="cart-badge" style="display:none">0</span>)</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <h2 class="section-title">Your Cart</h2>
+    <p class="section-subtitle" id="cart-status"></p>
+
+    <div id="cart-content">
+      <table class="cart-table" id="cart-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Subtotal</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="cart-body"></tbody>
+      </table>
+
+      <div class="cart-summary" id="cart-summary">
+        <div class="line"><span>Subtotal</span><span id="subtotal"></span></div>
+        <div class="line"><span>Shipping</span><span id="shipping">Free</span></div>
+        <div class="line total"><span>Total</span><span id="total"></span></div>
+        <a href="checkout.html" class="btn btn-checkout" style="display:block;text-align:center;text-decoration:none;">Proceed to Checkout</a>
+      </div>
+    </div>
+
+    <div id="cart-empty" style="display:none;text-align:center;padding:3rem 0;">
+      <p style="font-size:3rem;margin-bottom:1rem;">🛒</p>
+      <p style="color:var(--text-light);margin-bottom:1.5rem;">Your cart is empty</p>
+      <a href="products.html" class="btn btn-primary">Continue Shopping</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Grove &amp; Co. All rights reserved. | <a href="contact.html">Contact Us</a></p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    function renderCart() {
+      const items = Cart.get();
+      const body = document.getElementById('cart-body');
+      body.innerHTML = '';
+
+      if (items.length === 0) {
+        document.getElementById('cart-content').style.display = 'none';
+        document.getElementById('cart-empty').style.display = 'block';
+        document.getElementById('cart-status').textContent = '';
+        return;
+      }
+
+      document.getElementById('cart-status').textContent = `${Cart.count()} item${Cart.count() > 1 ? 's' : ''} in your cart`;
+
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-size:1.8rem;">${item.emoji || '📦'}</td>
+          <td><strong>${item.name}</strong></td>
+          <td>$${item.price.toFixed(2)}</td>
+          <td>${item.qty}</td>
+          <td>$${(item.price * item.qty).toFixed(2)}</td>
+          <td><button onclick="removeItem(${item.id})" style="background:none;border:none;color:#c00;cursor:pointer;font-size:1.1rem;">✕</button></td>
+        `;
+        body.appendChild(tr);
+      });
+
+      const total = Cart.total();
+      document.getElementById('subtotal').textContent = `$${total.toFixed(2)}`;
+      document.getElementById('shipping').textContent = total >= 50 ? 'Free' : '$5.00';
+      const finalTotal = total >= 50 ? total : total + 5;
+      document.getElementById('total').textContent = `$${finalTotal.toFixed(2)}`;
+    }
+
+    function removeItem(id) {
+      Cart.remove(id);
+      renderCart();
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — Grove &amp; Co.</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">Grove <span>&amp; Co.</span></a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="products.html" class="active">Shop</a>
+        <a href="contact.html">Contact</a>
+        <a href="cart.html">Cart (<span id="cart-badge" style="display:none">0</span>)</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="product-detail">
+      <div class="product-detail-img" id="product-emoji"></div>
+      <div class="product-detail-info">
+        <p class="category" id="product-category"></p>
+        <h1 id="product-name"></h1>
+        <p class="price" id="product-price"></p>
+        <p class="description" id="product-description"></p>
+        <div class="quantity-selector">
+          <button onclick="changeQty(-1)">−</button>
+          <span id="qty">1</span>
+          <button onclick="changeQty(1)">+</button>
+        </div>
+        <button class="btn btn-cart" onclick="addToCart()">Add to Cart</button>
+        <a href="cart.html" class="btn btn-checkout" style="display:block;text-align:center;margin-top:0.8rem;text-decoration:none;">View Cart</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Grove &amp; Co. All rights reserved. | <a href="contact.html">Contact Us</a></p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    /* Product catalog */
+    const products = {
+      1: { id: 1, name: 'Ceramic Planter Set', price: 48, category: 'Planters', emoji: '🪴',
+           description: 'A set of three minimalist ceramic planters in matte white, sage, and terracotta. Perfect for succulents, herbs, or small houseplants. Each planter includes a drainage hole and bamboo saucer.' },
+      2: { id: 2, name: 'Soy Wax Candle Trio', price: 36, category: 'Candles', emoji: '🕯️',
+           description: 'Hand-poured soy wax candles in three signature scents: Cedarwood & Vanilla, Fresh Linen, and Wild Fig. Each candle burns for approximately 45 hours. Made with lead-free cotton wicks.' },
+      3: { id: 3, name: 'Woven Storage Basket', price: 52, category: 'Storage', emoji: '🧺',
+           description: 'Handwoven from natural seagrass with reinforced cotton handles. Ideal for blankets, toys, or laundry. Measures 16" diameter × 14" tall. Each basket is unique due to the handmade process.' },
+      4: { id: 4, name: 'Stoneware Dinner Set', price: 89, category: 'Kitchen', emoji: '🍽️',
+           description: 'A 12-piece stoneware dinner set in a warm speckled glaze. Includes 4 dinner plates, 4 side plates, and 4 bowls. Microwave and dishwasher safe. Designed for everyday elegance.' },
+      5: { id: 5, name: 'Linen Throw Blanket', price: 64, category: 'Textiles', emoji: '🛋️',
+           description: 'Stonewashed pure linen throw in a soft oatmeal tone. Lightweight yet warm, with a beautifully textured drape. Measures 50" × 70". Pre-washed for a lived-in softness from day one.' },
+      6: { id: 6, name: 'Round Wall Mirror', price: 75, category: 'Decor', emoji: '🪞',
+           description: 'A 24" round mirror with a slim brass-finished metal frame. Adds light and depth to any room. Includes wall-mounting hardware. Works beautifully in entryways, bathrooms, or living spaces.' }
+    };
+
+    /* Parse product ID from URL */
+    const params = new URLSearchParams(window.location.search);
+    const productId = parseInt(params.get('id')) || 1;
+    const product = products[productId] || products[1];
+
+    /* Render product */
+    document.getElementById('product-emoji').textContent = product.emoji;
+    document.getElementById('product-category').textContent = product.category;
+    document.getElementById('product-name').textContent = product.name;
+    document.getElementById('product-price').textContent = `$${product.price.toFixed(2)}`;
+    document.getElementById('product-description').textContent = product.description;
+    document.title = `${product.name} — Grove & Co.`;
+
+    /* Quantity */
+    let qty = 1;
+    function changeQty(delta) {
+      qty = Math.max(1, qty + delta);
+      document.getElementById('qty').textContent = qty;
+    }
+
+    /* Add to Cart — would trigger AddToCart event */
+    function addToCart() {
+      Cart.add({ id: product.id, name: product.name, price: product.price, emoji: product.emoji });
+    }
+  </script>
+</body>
+</html>
